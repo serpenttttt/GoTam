@@ -3,10 +3,9 @@ package com.example.gotam_project.data.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "pets")
+@Entity(tableName = "pet")
 data class PetEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    val imageUrl: String,
-    val walkTime: Int
+    var walkTime: Long
 )
