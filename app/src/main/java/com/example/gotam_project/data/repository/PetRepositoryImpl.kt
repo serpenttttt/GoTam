@@ -1,5 +1,4 @@
-package com.example.gotam_project.data
-
+package com.example.gotam_project.data.repository
 
 import com.example.gotam_project.data.room.PetDao
 import com.example.gotam_project.data.room.PetEntity
