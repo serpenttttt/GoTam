@@ -9,10 +9,12 @@ import com.example.gotam_project.ui.theme.GoTamProjectTheme
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         MapKitFactory.setApiKey(BuildConfig.MAPKIT_API_KEY)
         MapKitFactory.initialize(this)
@@ -33,4 +35,5 @@ class MainActivity : ComponentActivity() {
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
+
 }

@@ -13,16 +13,20 @@ android {
 
     defaultConfig {
         applicationId = "com.example.gotam_project"
+
         minSdk = 26
+
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
 
         val mapkitApiKey: String = project.extensions.extraProperties["mapkitApiKey"] as String
 
         // Добавляем API-ключ в BuildConfig и Manifest
         buildConfigField("String", "MAPKIT_API_KEY", "\"$mapkitApiKey\"")
         manifestPlaceholders["MAPKIT_API_KEY"] = mapkitApiKey
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,7 +50,9 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+
         buildConfig = true
+
     }
 }
 
@@ -92,6 +98,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     // Дополнительные зависимости
+
     implementation (libs.androidx.core.ktx.v1120)
     implementation (libs.play.services.location.v2101)
     implementation(libs.accompanist.pager)
@@ -111,6 +118,7 @@ dependencies {
     // Compose Animation
     implementation(libs.androidx.animation)
 
+
     // Yandex MapKit
     implementation (libs.accompanist.permissions)
     implementation("com.yandex.android:maps.mobile:4.13.0-full")
@@ -124,6 +132,7 @@ dependencies {
 
     // Уведомления
     implementation (libs.androidx.core.ktx.v1101)
+
 }
 
 // Allow references to generated code

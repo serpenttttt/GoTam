@@ -1,15 +1,18 @@
 package com.example.gotam_project.ui.components
 
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.gotam_project.navigation.Screen
@@ -87,4 +90,5 @@ private fun getLabelForRoute(route: String): String {
         Screen.Profile.route -> "Профиль"
         else -> ""
     }
+
 }

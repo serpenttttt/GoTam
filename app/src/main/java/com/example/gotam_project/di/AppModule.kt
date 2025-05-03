@@ -1,10 +1,13 @@
 package com.example.gotam_project.di
 
+
 import android.app.Application
+
 import android.content.Context
 import com.example.gotam_project.data.room.AppDatabase
 import com.example.gotam_project.data.room.PetDao
 import com.example.gotam_project.data.repository.PetRepositoryImpl
+
 import com.example.gotam_project.data.repository.WalkRepositoryImpl
 import com.example.gotam_project.data.room.WalkDao
 import com.example.gotam_project.domain.model.IPetRepository
@@ -30,11 +33,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
     fun provideContext(application: Application): Context {
         return application.applicationContext
     }
+
 
     @Provides
     @Singleton
@@ -50,12 +55,14 @@ object AppModule {
 
     @Provides
     @Singleton
+
     fun provideWalkDao(appDatabase: AppDatabase): WalkDao {
         return appDatabase.walkDao() // добавленное изменение
     }
 
     @Provides
     @Singleton
+
     fun provideCoroutineScope(): CoroutineScope {
         return CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
@@ -64,6 +71,7 @@ object AppModule {
     @Singleton
     fun providePetRepository(
         petDao: PetDao,
+
         coroutineScope: CoroutineScope
     ): IPetRepository {
         return PetRepositoryImpl(petDao, coroutineScope)
@@ -73,6 +81,7 @@ object AppModule {
     @Singleton
     fun provideWalkRepository(walkDao: WalkDao): IWalkRepository {
         return WalkRepositoryImpl(walkDao) // добавленное изменение
+
     }
 
     @Provides
@@ -92,6 +101,7 @@ object AppModule {
     fun provideSetNameUsecase(petRepository: IPetRepository): SetPetNameUsecase {
         return SetPetNameUsecase(petRepository)
     }
+
 
     @Provides
     @Singleton
@@ -114,4 +124,5 @@ object AppModule {
     fun provideGetWalksUsecase(walkRepository: IWalkRepository): GetWalksUsecase {
         return GetWalksUsecase(walkRepository)
     }
+
 }

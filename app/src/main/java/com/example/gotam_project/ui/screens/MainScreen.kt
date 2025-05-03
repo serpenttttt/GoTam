@@ -156,5 +156,6 @@ private fun WalkTimerBottomSheet(
                 Text("начать", fontSize = 18.sp)
             }
         }
+
     }
 }
