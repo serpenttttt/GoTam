@@ -1,6 +1,10 @@
 package com.example.gotam_project.domain.model
 
+import com.example.gotam_project.data.room.PetEntity
+
 interface IPetRepository {
-    suspend fun getPet(): PetDTO
-    suspend fun setWalkTime(duration: Int)
+    suspend fun getPet(id: Int): PetDTO?
+    suspend fun insertPet(pet: PetEntity)
+    suspend fun setWalkTime(pet: PetDTO)
+    suspend fun setPetName(id: Int, name: String)
 }

@@ -1,10 +1,11 @@
 package com.example.gotam_project.domain.usecase
 
 import com.example.gotam_project.domain.model.IPetRepository
+import com.example.gotam_project.domain.model.PetDTO
 
+class SetWalkTime(private val petRepository: IPetRepository) {
 
-class SetWalkTime(private val repository: IPetRepository) {
-    suspend fun execute(duration: Int) {
-        repository.setWalkTime(duration)
+    suspend operator fun invoke(pet: PetDTO) {
+        petRepository.setWalkTime(pet)
     }
 }
