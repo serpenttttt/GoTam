@@ -30,7 +30,8 @@ private fun WalkEntity.toDTO(): WalkDTO {
         date = this.date,
         duration = this.duration,
         steps = this.steps,
-        path = this.path
+        path = this.path,
+        calories = this.calories
     )
 }
 
@@ -40,6 +41,7 @@ private fun WalkDTO.toEntity(): WalkEntity {
         date = this.date,
         duration = this.duration,
         steps = this.steps,
-        path = this.path
+        path = this.path,
+        calories = this.calories
     )
 }

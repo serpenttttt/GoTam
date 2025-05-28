@@ -8,8 +8,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gotam_project.ui.components.NavBar
+import com.example.gotam_project.ui.screens.FriendsScreen
+import com.example.gotam_project.ui.screens.LoginScreen
 import com.example.gotam_project.ui.screens.MainScreen
 import com.example.gotam_project.ui.screens.ProfileScreen
+import com.example.gotam_project.ui.screens.RegisterScreen
+import com.example.gotam_project.ui.screens.WalkArchiveScreen
 import com.example.gotam_project.ui.screens.WalkScreen
 
 
@@ -22,14 +26,50 @@ fun NavGraph() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "main",
+            startDestination = "LoginScreen", // Стартуем с экрана входа
             modifier = Modifier.padding(innerPadding)
         ) {
+            // Главный экран (только для авторизованных)
             composable("main") {
                 MainScreen(navController = navController)
             }
+
             composable("profile") {
                 ProfileScreen(navController = navController)
+            }
+
+            // Экран входа
+            composable("LoginScreen") {
+                LoginScreen(
+                    navController = navController,
+                    onSuccess = {
+                        // При успешном входе переходим на главный экран с очисткой стека
+                        navController.navigate("main") {
+                            popUpTo("LoginScreen") { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            // Регистрация
+            composable("RegisterScreen") {
+                RegisterScreen(
+                    navController = navController,
+                    onSuccess = {
+                        // После регистрации переходим на главный экран
+                        navController.navigate("main") {
+                            popUpTo("LoginScreen") { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            composable("walkArchive") {
+                WalkArchiveScreen(navController = navController)
+            }
+
+            composable("friends") {
+                FriendsScreen()
             }
 
             composable(

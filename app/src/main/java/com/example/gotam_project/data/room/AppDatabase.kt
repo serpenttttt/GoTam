@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [PetEntity::class, WalkEntity::class],
-    version = 4, // увеличиваем версию, т.к. добавили новую таблицу
+    version = 5, // увеличиваем версию, т.к. добавили новую таблицу
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

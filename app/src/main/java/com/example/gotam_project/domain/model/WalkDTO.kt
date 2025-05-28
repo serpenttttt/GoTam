@@ -5,5 +5,6 @@ data class WalkDTO(
     val date: Long,
     val duration: Long,
     val steps: Int,
-    val path: String
+    val path: String,
+    val calories: Int
 )

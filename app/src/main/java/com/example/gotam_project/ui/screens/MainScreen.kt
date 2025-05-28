@@ -1,15 +1,27 @@
 package com.example.gotam_project.ui.screens
 
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,6 +29,9 @@ import androidx.navigation.NavController
 import com.example.gotam_project.R
 import com.example.gotam_project.ui.components.AnimatedDog
 import com.example.gotam_project.ui.screens.main.MainViewModel
+import kotlin.math.PI
+import kotlin.math.atan2
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,64 +113,120 @@ private fun WalkButton(onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun WalkTimerBottomSheet(
+fun WalkTimerBottomSheet(
     sheetState: SheetState,
     onDismiss: () -> Unit,
     onStartWalk: (Long) -> Unit
 ) {
-    var selectedMinutes by remember { mutableStateOf(30) }
+    var selectedMinutes by remember { mutableStateOf(30f) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState
+        sheetState = sheetState,
+        containerColor = Color(0xFFA3D048),
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .background(Color(0xFFA3D048))
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Заголовок
             Text(
-                "новая цель",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                text = "НОВАЯ ЦЕЛЬ",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
             )
-
-            Text(
-                text = "$selectedMinutes минут",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Slider(
-                value = selectedMinutes.toFloat(),
-                onValueChange = { selectedMinutes = it.toInt() },
-                valueRange = 1f..120f,
-                steps = 119,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Row(
-                    modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-            Text("1 мин", color = Color.Gray)
-            Text("120 мин", color = Color.Gray)
-        }
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Круглый слайдер
+            CircularSlider(
+                value = selectedMinutes,
+                onValueChange = { selectedMinutes = it },
+                valueRange = 1f..120f,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Кнопка "НАЧАТЬ"
             Button(
                 onClick = {
-                    val endTime = System.currentTimeMillis() + selectedMinutes * 60 * 1000L
+                    val endTime = System.currentTimeMillis() + selectedMinutes.toLong() * 60 * 1000L
                     onStartWalk(endTime)
                 },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA726))
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9131))
             ) {
-                Text("начать", fontSize = 18.sp)
+                Text("НАЧАТЬ", fontSize = 18.sp)
             }
         }
+    }
+}
+@Composable
+fun CircularSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    modifier: Modifier = Modifier
+) {
+    val stroke = 20f
+    val angleRange = 360f   // Полный круг
+    val startAngle = -90f    // Старт
 
+    Box(
+        modifier = modifier
+            .size(260.dp)
+            .pointerInput(Unit) {
+                detectDragGestures { change, _ ->
+                    val x = change.position.x - size.width / 2
+                    val y = change.position.y - size.height / 2
+                    val angle = (atan2(y, x) * 180f / PI.toFloat() + 360f) % 360f
+
+                    val normalized = ((angle - startAngle + 360f) % 360f).coerceIn(0f, angleRange)
+                    val newValue = (normalized / angleRange) * (valueRange.endInclusive - valueRange.start) + valueRange.start
+                    onValueChange(newValue.coerceIn(valueRange))
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val radius = size.minDimension / 2.2f
+            val center = Offset(size.width / 2, size.height / 2)
+            val sweepAngle = ((value - valueRange.start) / (valueRange.endInclusive - valueRange.start)) * angleRange
+
+            // Белый круг
+            drawCircle(
+                color = Color.White,
+                radius = radius,
+                center = center,
+                style = Stroke(width = stroke, cap = StrokeCap.Round)
+            )
+
+            // Оранжевая дуга
+            drawArc(
+                color = Color(0xFFFF9131),
+                startAngle = startAngle,
+                sweepAngle = sweepAngle,
+                useCenter = false,
+                topLeft = Offset(center.x - radius, center.y - radius),
+                size = Size(radius * 2, radius * 2),
+                style = Stroke(width = stroke, cap = StrokeCap.Round)
+            )
+        }
+
+
+        Text(
+            text = "${value.toInt()} мин",
+            color = Color.White,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

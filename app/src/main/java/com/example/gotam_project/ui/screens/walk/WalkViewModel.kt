@@ -46,12 +46,14 @@ class WalkViewModel @Inject constructor(
 
     fun saveWalk(steps: Int, duration: Long) {
         viewModelScope.launch {
+            val calories = (steps * 0.04).toInt()
             val encodedPath = _path.value.joinToString(";") { "${it.latitude},${it.longitude}" }
             val walk = WalkDTO(
                 date = System.currentTimeMillis(),
                 duration = duration,
                 steps = steps,
-                path = encodedPath
+                path = encodedPath,
+                calories = calories
             )
             saveWalkUsecase(walk)
         }

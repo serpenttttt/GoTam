@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,7 +29,9 @@ fun NavBar(
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        modifier = modifier.height(90.dp),
+        modifier = modifier
+            .height(120.dp)
+            .windowInsetsPadding(WindowInsets.navigationBars),
         containerColor = Color(0xFFA3D048)
     ) {
         Screen.bottomNavItems.forEach { screen ->
@@ -48,7 +51,8 @@ fun NavBar(
                         if (isSelected) {
                             Text(
                                 text = getLabelForRoute(screen.route),
-                                color = Color.White
+                                color = Color.White,
+                                fontSize = 9.sp
                             )
                         }
                     }
@@ -66,7 +70,6 @@ fun NavBar(
                     indicatorColor = Color(0xFF8BB33B)
                 ),
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
                     .padding(vertical = 4.dp)
                     .height(48.dp)
             )

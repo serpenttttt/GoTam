@@ -4,6 +4,7 @@ package com.example.gotam_project.di
 import android.app.Application
 
 import android.content.Context
+import com.example.gotam_project.data.repository.FriendsRepository
 import com.example.gotam_project.data.room.AppDatabase
 import com.example.gotam_project.data.room.PetDao
 import com.example.gotam_project.data.repository.PetRepositoryImpl
@@ -20,6 +21,8 @@ import com.example.gotam_project.domain.usecase.SaveWalkUsecase
 import com.example.gotam_project.util.sensors.StepCounterManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +36,17 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFriendsRepository(
+        firestore: FirebaseFirestore,
+        firebaseAuth: FirebaseAuth
+    ): FriendsRepository = FriendsRepository(firestore, firebaseAuth)
 
     @Provides
     @Singleton
@@ -124,5 +138,8 @@ object AppModule {
     fun provideGetWalksUsecase(walkRepository: IWalkRepository): GetWalksUsecase {
         return GetWalksUsecase(walkRepository)
     }
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
 }

@@ -21,8 +21,16 @@ import kotlinx.coroutines.delay
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.airbnb.lottie.compose.*
+import com.example.gotam_project.R
 import com.example.gotam_project.ui.screens.walk.WalkViewModel
 
 @OptIn(ExperimentalPagerApi::class)
@@ -86,8 +94,8 @@ fun WalkTimerPage(
 
     val context = LocalContext.current
     val stepManager = remember { StepCounterManager(context) }
-
     val steps by stepManager.stepCount.collectAsState()
+    val calories = (steps * 0.04).toInt()
 
     LaunchedEffect(Unit) {
         stepManager.start()
@@ -110,32 +118,86 @@ fun WalkTimerPage(
         }
     }
 
-    val minutes = (remainingTime / 1000 / 60).coerceAtLeast(0)
+    val hours = (remainingTime / 1000 / 3600).coerceAtLeast(0)
+    val minutes = (remainingTime / 1000 / 60 % 60).coerceAtLeast(0)
     val seconds = (remainingTime / 1000 % 60).coerceAtLeast(0)
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White.copy(alpha = 0.9f)),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("идёт прогулка", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(24.dp))
-            Text("осталось: ${minutes} мин ${seconds} сек", style = MaterialTheme.typography.displaySmall)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Шагов: $steps", fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(
-                onClick = {
-                    val duration = System.currentTimeMillis() - startTime
-                    walkViewModel.saveWalk(steps = steps, duration = duration)
-                    onWalkEnd()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA726))
-            ) {
-                Text("завершить", fontSize = 18.sp)
-            }
+
+        BackgroundImage()
+
+        // Верхняя информация
+        Column(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp, end = 16.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Text("$steps ШАГОВ", color = Color(0xFFD81B60), fontSize = 32.sp)
+            Text("$calories ККАЛ", color = Color(0xFF1976D2), fontSize = 32.sp)
+        }
+
+        // Анимированная собака через Lottie
+        val composition by rememberLottieComposition(
+            LottieCompositionSpec.Asset("dog_walk_animation.json")
+        )
+        val progress by animateLottieCompositionAsState(
+            composition,
+            iterations = LottieConstants.IterateForever
+        )
+
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier
+                .size(450.dp)
+                .align(Alignment.Center)
+                .offset(y = 80.dp)
+        )
+
+        // Таймер
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 90.dp)
+                .background(Color(0xFFFFA726), shape = RoundedCornerShape(16.dp))
+                .padding(horizontal = 32.dp, vertical = 12.dp)
+        ) {
+            Text(
+                text = String.format("%01d:%02d:%02d", hours, minutes, seconds),
+                fontSize = 24.sp,
+                color = Color.White
+            )
+        }
+
+        // Кнопка завершения
+        IconButton(
+            onClick = {
+                val duration = System.currentTimeMillis() - startTime
+                walkViewModel.saveWalk(steps = steps, duration = duration)
+                onWalkEnd()
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp)
+                .size(56.dp)
+                .background(Color.Red, shape = CircleShape)
+        ) {
+            Icon(Icons.Default.Close, contentDescription = "Закончить", tint = Color.White)
         }
     }
+}
+
+@Composable
+private fun BackgroundImage() {
+    Image(
+        painter = painterResource(id = R.drawable.nature_background),
+        contentDescription = "фон приложения",
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
 }

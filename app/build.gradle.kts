@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -117,12 +118,13 @@ dependencies {
 
     // Compose Animation
     implementation(libs.androidx.animation)
+    implementation (libs.android.lottie.compose)
 
 
     // Yandex MapKit
     implementation (libs.accompanist.permissions)
-    implementation("com.yandex.android:maps.mobile:4.13.0-full")
-    implementation ("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.maps.mobile)
+    implementation (libs.play.services.location)
 
     // WorkManager
     implementation (libs.androidx.work.runtime.ktx.v281)
@@ -133,9 +135,24 @@ dependencies {
     // Уведомления
     implementation (libs.androidx.core.ktx.v1101)
 
+    implementation (libs.androidx.ui.vx)
+    implementation (libs.ui.graphics)
+    implementation (libs.ui.tooling)
+
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(platform(libs.firebase.bom.v3281))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.firestore.ktx)
+
+    implementation (libs.material3)
+
 }
 
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
+

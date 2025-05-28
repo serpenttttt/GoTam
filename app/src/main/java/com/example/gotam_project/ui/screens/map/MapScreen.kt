@@ -11,6 +11,7 @@ import com.yandex.mapkit.map.*
 import com.yandex.mapkit.mapview.MapView as YandexMapView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.yandex.mapkit.geometry.Polyline
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -36,15 +37,18 @@ fun MapScreen(
         }
     }
 
+    val path by viewModel.routePoints.collectAsState()
+
     currentLocation?.let { point ->
         AndroidView(factory = {
             YandexMapView(context).apply {
-                map.move(
-                    CameraPosition(point, 16.0f, 0.0f, 0.0f),
-                    Animation(Animation.Type.SMOOTH, 1f), null
-                )
-                map.mapObjects.clear()  // Очищаем старые метки
+                map.move(CameraPosition(point, 16f, 0f, 0f), Animation(Animation.Type.SMOOTH, 1f), null)
+                map.mapObjects.clear()
                 map.mapObjects.addPlacemark(point)
+
+                if (path.size >= 2) {
+                    map.mapObjects.addPolyline(Polyline(path))
+                }
             }
         }, modifier = Modifier.fillMaxSize())
     }
