@@ -8,17 +8,27 @@ pluginManagement {
             }
         }
         mavenCentral()
+
+        maven {
+            url = uri("https://maven.google.com/")
+        }
         gradlePluginPortal()
     }
 }
+
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+
+        maven { url = uri("https://maven.yandex.ru") }
+
     }
 }
 
 rootProject.name = "GoTam_project"
+
 include(":app")
- 
+

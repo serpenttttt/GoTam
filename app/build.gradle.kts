@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -13,10 +14,20 @@ android {
 
     defaultConfig {
         applicationId = "com.example.gotam_project"
-        minSdk = 24
+
+        minSdk = 26
+
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+
+        val mapkitApiKey: String = project.extensions.extraProperties["mapkitApiKey"] as String
+
+        // Добавляем API-ключ в BuildConfig и Manifest
+        buildConfigField("String", "MAPKIT_API_KEY", "\"$mapkitApiKey\"")
+        manifestPlaceholders["MAPKIT_API_KEY"] = mapkitApiKey
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +51,9 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+
+        buildConfig = true
+
     }
 }
 
@@ -85,6 +99,11 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     // Дополнительные зависимости
+
+    implementation (libs.androidx.core.ktx.v1120)
+    implementation (libs.play.services.location.v2101)
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
@@ -99,9 +118,41 @@ dependencies {
 
     // Compose Animation
     implementation(libs.androidx.animation)
+    implementation (libs.android.lottie.compose)
+
+
+    // Yandex MapKit
+    implementation (libs.accompanist.permissions)
+    implementation(libs.maps.mobile)
+    implementation (libs.play.services.location)
+
+    // WorkManager
+    implementation (libs.androidx.work.runtime.ktx.v281)
+
+    // SavedStateHandle
+    implementation( libs.androidx.lifecycle.viewmodel.compose)
+
+    // Уведомления
+    implementation (libs.androidx.core.ktx.v1101)
+
+    implementation (libs.androidx.ui.vx)
+    implementation (libs.ui.graphics)
+    implementation (libs.ui.tooling)
+
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(platform(libs.firebase.bom.v3281))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.firestore.ktx)
+
+    implementation (libs.material3)
+
 }
 
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
+

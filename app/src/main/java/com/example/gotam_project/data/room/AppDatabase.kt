@@ -1,14 +1,19 @@
 package com.example.gotam_project.data.room
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import android.content.Context
 
-@Database(entities = [PetEntity::class], version = 2, exportSchema = false)
+@Database(
+    entities = [PetEntity::class, WalkEntity::class],
+    version = 5, // увеличиваем версию, т.к. добавили новую таблицу
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun petDao(): PetDao
+    abstract fun walkDao(): WalkDao
 
     companion object {
         @Volatile
@@ -20,7 +25,8 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "pet_database"
-                ).fallbackToDestructiveMigration()
+                )
+                    .fallbackToDestructiveMigration() // пусть остаётся пока
                     .build()
                 INSTANCE = instance
                 instance

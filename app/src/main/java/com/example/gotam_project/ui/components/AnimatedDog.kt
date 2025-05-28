@@ -14,37 +14,46 @@ import com.example.gotam_project.R
 
 @Composable
 fun AnimatedDog() {
+
+    // бесконечная анимация
     val infiniteTransition = rememberInfiniteTransition(label = "TailAnimation")
 
+    // анимируем вращение хвоста от -20 до 20 градусов
     val tailRotation by infiniteTransition.animateFloat(
-        initialValue = -20f,
-        targetValue = 20f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 400, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+        initialValue = -20f, // начальный угол
+        targetValue = 50f, // конечный угол
+        animationSpec = infiniteRepeatable( // повторяем анимацию
+            animation = tween(durationMillis = 500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse // повторяем анимацию в обратном порядке
+
         ), label = "TailRotation"
     )
 
     Box(contentAlignment = Alignment.BottomEnd) {
 
-        // Хвост с анимацией
+
+        // хвост
+
         Image(
             painter = painterResource(id = R.drawable.dog_tail),
             contentDescription = "Dog Tail",
             modifier = Modifier
                 .size(200.dp)
-                .offset(x = 5.dp, y = -70.dp)
+
+                .offset(x = 5.dp, y = -40.dp)
                 .rotate(tailRotation)
         )
-        // Тело собаки
+
+        // тело собаки
+
         Image(
             painter = painterResource(id = R.drawable.dog_body),
             contentDescription = "Dog Body",
             modifier = Modifier
                 .size(300.dp)
-                .offset(x = 5.dp, y = -60.dp)
-        )
 
+                .offset(x = 5.dp, y = -30.dp)
+        )
 
     }
 }

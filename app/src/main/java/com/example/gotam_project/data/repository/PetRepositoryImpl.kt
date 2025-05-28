@@ -9,8 +9,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PetRepositoryImpl(
-    private val petDao: PetDao
+    private val petDao: PetDao,
+    coroutineScope: CoroutineScope
 ) : IPetRepository {
+
+    // Инициализация данных, если питомец еще не создан
 
     fun initializeData(coroutineScope: CoroutineScope) {
         coroutineScope.launch(Dispatchers.IO) {
@@ -25,25 +28,38 @@ class PetRepositoryImpl(
         }
     }
 
+    // Получение питомца по ID
+
     override suspend fun getPet(id: Int): PetDTO? {
         val petEntity = petDao.getPetById(id)
         return petEntity?.toPetDTO()
     }
 
+
+    // Вставка нового питомца
+
     override suspend fun insertPet(pet: PetEntity) {
         petDao.insertPet(pet)
     }
 
+
+    // Обновление времени прогулки питомца
+
     override suspend fun setWalkTime(pet: PetDTO) {
         petDao.updateWalkTime(pet.id, pet.walkTime)
     }
+
+
+    // Обновление имени питомца
 
     override suspend fun setPetName(id: Int, name: String) {
         petDao.updatePetName(id, name)
     }
 }
 
-// Расширения для преобразования между PetEntity и PetDTO
+
+// Расширение для преобразования из PetEntity в PetDTO
+
 fun PetEntity.toPetDTO(): PetDTO {
     return PetDTO(
         id = this.id,
@@ -51,6 +67,9 @@ fun PetEntity.toPetDTO(): PetDTO {
         walkTime = this.walkTime
     )
 }
+
+
+// Расширение для преобразования из PetDTO в PetEntity
 
 fun PetDTO.toPetEntity(): PetEntity {
     return PetEntity(

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.compose.rememberNavController
 import com.example.gotam_project.ui.screens.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +21,8 @@ class MainFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MainScreen(viewModel)
+                val navController = rememberNavController()
+                MainScreen(viewModel = viewModel, navController = navController)
             }
         }
     }
